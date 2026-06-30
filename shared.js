@@ -253,7 +253,8 @@
       var domain = els.domainSelect.value;
       if (!domain) throw new Error("Load domains first.");
 
-      var username = (els.usernamePrefix.value || role + "-" + Date.now() + "-" + randomString(5))
+      var prefix = els.usernamePrefix.value || role;
+      var username = (prefix + "-" + Date.now() + "-" + randomString(5))
         .toLowerCase()
         .replace(/[^a-z0-9._-]/g, "");
 
