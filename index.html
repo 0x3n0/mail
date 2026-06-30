@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mail.tm Test Accounts</title>
+  <link rel="stylesheet" href="./shared.css" />
+</head>
+<body>
+
+<!-- ========== HOME ========== -->
+<section id="section-home" class="shell">
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Authorized testing helper</p>
+      <h1>Mail.tm Attacker / Victim Test Accounts</h1>
+      <p>
+        Static pages for creating disposable Mail.tm accounts, checking inboxes,
+        reading messages, and extracting verification links.
+      </p>
+      <p class="notice">
+        Use only for systems where you have permission to test.
+        Powered by <a href="https://mail.tm/" target="_blank" rel="noreferrer">Mail.tm</a>.
+      </p>
+    </section>
+
+    <section class="grid two">
+      <a class="role-card attacker" href="#attacker">
+        <span>Attacker</span>
+        <strong>Open attacker inbox</strong>
+        <small>Create and monitor the attacker test email.</small>
+      </a>
+
+      <a class="role-card victim" href="#victim">
+        <span>Victim</span>
+        <strong>Open victim inbox</strong>
+        <small>Create and monitor the victim test email.</small>
+      </a>
+    </section>
+
+    <section class="card">
+      <h2>Quick usage</h2>
+      <ol>
+        <li>Open <strong>Attacker</strong> page and click <strong>Load domains</strong>.</li>
+        <li>Click <strong>Create email</strong>.</li>
+        <li>Repeat on <strong>Victim</strong> page.</li>
+        <li>Use those two emails for registration, invite, reset-password, or email-verification testing.</li>
+        <li>Click <strong>Refresh inbox</strong> or enable auto refresh.</li>
+      </ol>
+    </section>
+  </main>
+</section>
+
+<!-- ========== ATTACKER ========== -->
+<section id="section-attacker" class="shell" style="display:none">
+  <main>
+    <nav class="topbar">
+      <a href="#home">← Home</a>
+      <a href="#attacker">Attacker</a>
+      <a href="#victim">Victim</a>
+    </nav>
+
+    <section class="hero compact attacker">
+      <p class="eyebrow">Mail.tm disposable inbox</p>
+      <h1>Attacker Email Page</h1>
+      <p>
+        Create one Mail.tm account for the attacker role, then monitor the inbox and extract links.
+      </p>
+      <p class="notice">
+        This page stores the generated email, password, and token in your browser localStorage only.
+        Do not use it for sensitive personal accounts. Keep request speed reasonable to avoid rate limits.
+        Use only for authorized testing. Powered by
+        <a href="https://mail.tm/" target="_blank" rel="noreferrer">Mail.tm</a>.
+      </p>
+    </section>
+
+    <section class="grid">
+      <section class="card">
+        <div class="card-head">
+          <h2>1. Account</h2>
+          <span id="attk-statusBadge" class="badge idle">Idle</span>
+        </div>
+
+        <label>
+          API base URL
+          <input id="attk-baseUrl" value="https://api.mail.tm" />
+        </label>
+
+        <div class="row">
+          <label class="grow">
+            Domain
+            <select id="attk-domainSelect"></select>
+          </label>
+          <button id="attk-loadDomainsBtn" type="button">Load domains</button>
+        </div>
+
+        <div class="row">
+          <label class="grow">
+            Username prefix
+            <input id="attk-usernamePrefix" value="attacker" />
+          </label>
+          <button id="attk-randomUserBtn" type="button">Random</button>
+        </div>
+
+        <label>
+          Password
+          <input id="attk-passwordInput" value="" />
+        </label>
+
+        <div class="actions">
+          <button id="attk-createBtn" type="button" class="primary">Create email</button>
+          <button id="attk-restoreBtn" type="button">Restore saved</button>
+          <button id="attk-clearBtn" type="button" class="danger">Clear local data</button>
+        </div>
+
+        <div class="account-box">
+          <small>Email address</small>
+          <div class="copyline">
+            <code id="attk-emailOutput">not created yet</code>
+            <button id="attk-copyEmailBtn" type="button">Copy</button>
+          </div>
+          <small>Password</small>
+          <div class="copyline">
+            <code id="attk-passwordOutput">-</code>
+            <button id="attk-copyPasswordBtn" type="button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>2. Inbox</h2>
+          <label class="switch">
+            <input id="attk-autoRefresh" type="checkbox" />
+            <span>Auto refresh</span>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="attk-refreshBtn" type="button" class="primary">Refresh inbox</button>
+          <button id="attk-copySessionBtn" type="button">Copy session JSON</button>
+        </div>
+
+        <div id="attk-inboxList" class="inbox-list empty">
+          No messages loaded yet.
+        </div>
+      </section>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>3. Message reader</h2>
+        <button id="attk-copyLinksBtn" type="button">Copy extracted links</button>
+      </div>
+
+      <div id="attk-messageView" class="message-view empty">
+        Select a message from inbox.
+      </div>
+
+      <h3>Extracted links</h3>
+      <div id="attk-linksView" class="links-view empty">No links extracted yet.</div>
+    </section>
+  </main>
+</section>
+
+<!-- ========== VICTIM ========== -->
+<section id="section-victim" class="shell" style="display:none">
+  <main>
+    <nav class="topbar">
+      <a href="#home">← Home</a>
+      <a href="#attacker">Attacker</a>
+      <a href="#victim">Victim</a>
+    </nav>
+
+    <section class="hero compact victim">
+      <p class="eyebrow">Mail.tm disposable inbox</p>
+      <h1>Victim Email Page</h1>
+      <p>
+        Create one Mail.tm account for the victim role, then monitor the inbox and extract links.
+      </p>
+      <p class="notice">
+        This page stores the generated email, password, and token in your browser localStorage only.
+        Do not use it for sensitive personal accounts. Keep request speed reasonable to avoid rate limits.
+        Use only for authorized testing. Powered by
+        <a href="https://mail.tm/" target="_blank" rel="noreferrer">Mail.tm</a>.
+      </p>
+    </section>
+
+    <section class="grid">
+      <section class="card">
+        <div class="card-head">
+          <h2>1. Account</h2>
+          <span id="vic-statusBadge" class="badge idle">Idle</span>
+        </div>
+
+        <label>
+          API base URL
+          <input id="vic-baseUrl" value="https://api.mail.tm" />
+        </label>
+
+        <div class="row">
+          <label class="grow">
+            Domain
+            <select id="vic-domainSelect"></select>
+          </label>
+          <button id="vic-loadDomainsBtn" type="button">Load domains</button>
+        </div>
+
+        <div class="row">
+          <label class="grow">
+            Username prefix
+            <input id="vic-usernamePrefix" value="victim" />
+          </label>
+          <button id="vic-randomUserBtn" type="button">Random</button>
+        </div>
+
+        <label>
+          Password
+          <input id="vic-passwordInput" value="" />
+        </label>
+
+        <div class="actions">
+          <button id="vic-createBtn" type="button" class="primary">Create email</button>
+          <button id="vic-restoreBtn" type="button">Restore saved</button>
+          <button id="vic-clearBtn" type="button" class="danger">Clear local data</button>
+        </div>
+
+        <div class="account-box">
+          <small>Email address</small>
+          <div class="copyline">
+            <code id="vic-emailOutput">not created yet</code>
+            <button id="vic-copyEmailBtn" type="button">Copy</button>
+          </div>
+          <small>Password</small>
+          <div class="copyline">
+            <code id="vic-passwordOutput">-</code>
+            <button id="vic-copyPasswordBtn" type="button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>2. Inbox</h2>
+          <label class="switch">
+            <input id="vic-autoRefresh" type="checkbox" />
+            <span>Auto refresh</span>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="vic-refreshBtn" type="button" class="primary">Refresh inbox</button>
+          <button id="vic-copySessionBtn" type="button">Copy session JSON</button>
+        </div>
+
+        <div id="vic-inboxList" class="inbox-list empty">
+          No messages loaded yet.
+        </div>
+      </section>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>3. Message reader</h2>
+        <button id="vic-copyLinksBtn" type="button">Copy extracted links</button>
+      </div>
+
+      <div id="vic-messageView" class="message-view empty">
+        Select a message from inbox.
+      </div>
+
+      <h3>Extracted links</h3>
+      <div id="vic-linksView" class="links-view empty">No links extracted yet.</div>
+    </section>
+  </main>
+</section>
+
+<script src="./shared.js"></script>
+</body>
+</html>
